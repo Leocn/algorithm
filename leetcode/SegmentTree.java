@@ -33,7 +33,7 @@ public class SegmentTree {
             int height = query(1,1,n,p[0],p[0]+p[1]-1,0);
 
             update(1,1,n,p[0],p[0]+p[1]-1,height+ p[1], 0);
-               max = Math.max(height+p[1], max);
+            max = Math.max(height+p[1], max);
             ans.add(max);
 
         }
