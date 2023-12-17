@@ -1,121 +1,107 @@
 package com.example.demo.leetcode;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigInteger;
+import java.util.*;
 
 public class Week375 {
     public static void main(String[] args) {
-        System.out.println(minimumOperations(new int[]{2,2}));
-        System.out.println(minimumRemoval(new long[]{1,2}));
-        System.out.println();
-    }
-
-
-    public static int minimumOperations(int[] nums) {
-        int l = nums.length;
-        Map<Integer,Integer> map1 = new HashMap<>();
-        Map<Integer,Integer> map2 = new HashMap<>();
-
-        int ll=0, rr=0;
-        for(int i=0;i<l;i++){
-            if(i%2==0){
-                map1.put(nums[i], map1.getOrDefault(nums[i],0)+1);
-                ll++;
-
-            }else
-            {
-                map2.put(nums[i], map2.getOrDefault(nums[i],0)+1);
-                rr++;
-            }
-        }
-        int ans1 =0;
-        int a1 =0;
-        for(Map.Entry<Integer, Integer> entry:map1.entrySet()){
-            if(entry.getValue()>ans1){
-                ans1 = entry.getValue();
-                a1 = entry.getKey();
-            }
-        }
-
-
-        int ans2 =0;
-        int a2 =0;
-        for(Map.Entry<Integer, Integer> entry:map2.entrySet()){
-            if(entry.getValue()>ans2){
-                ans2 = entry.getValue();
-                a2 = entry.getKey();
-            }
-        }
-
-        int res = 0;
-
-        if(a1==a2){
-            int ans11 =0;
-            int a11 =0;
-            int ans22 =0;
-            int a22 =0;
-            for(Map.Entry<Integer, Integer> entry:map1.entrySet()){
-                if(entry.getValue()>ans11 && entry.getKey()!=a1){
-                    ans11 = entry.getValue();
-                    a11 = entry.getKey();
-                }
-            }
-
-            for(Map.Entry<Integer, Integer> entry:map2.entrySet()){
-                if(entry.getValue()>ans22&& a2!=entry.getKey()){
-                    ans22 = entry.getValue();
-                    a22 = entry.getKey();
-                }
-            }
-            res = Math.min( ll-ans1 + rr-ans22, ll-ans11+ rr-ans2       );
-
-
-        }else {
-            res = ll-ans1 + rr-ans2;
-        }
-        return res;
-
 
     }
 
-    public static long minimumRemoval(long[] beans) {
-        Arrays.sort(beans);
-        int l = beans.length;
-        long[] sums = new long[l+1];
-        for(int i=0;i<l;i++){
-            sums[i+1] = beans[i]+sums[i];
-        }
-        long ans = Long.MAX_VALUE;
-
-        for (int i = 0; i < l; i++) {
-            int tem = i;
-            while (tem<l-1 &&beans[tem]==beans[tem+1]){
-                tem++;
-            }
-            ans = Math.min(sums[i] + sums[l]-sums[tem]-(long)(l-tem)*beans[i], ans );
-            i = tem;
-        }
-        return ans;
-
-
-    }
-
-    public int maximumANDSum(int[] nums, int numSlots) {
+    public int countTestedDevices(int[] batteryPercentages) {
+        int n = batteryPercentages.length;
         int ans = 0;
-        int[] f = new int[1 << (numSlots * 2)];
-        for (int i = 0; i < f.length; i++) {
-            int c = Integer.bitCount(i);
-            if (c >= nums.length) continue;
-            for (int j = 0; j < numSlots * 2; ++j) {
-                if ((i & (1 << j)) == 0) { // 枚举空篮子 j
-                    int s = i | (1 << j);
-                    f[s] = Math.max(f[s], f[i] + ((j / 2 + 1) & nums[c]));
-                    ans = Math.max(ans, f[s]);
+        for (int i = 0; i < n; i++) {
+            if(batteryPercentages[i]>0){
+                ans ++;
+                for (int j = i+1; j <n ; j++) {
+                    batteryPercentages[j] = Math.max(batteryPercentages[j]-1, 0);
                 }
             }
         }
         return ans;
+    }
+    public List<Integer> getGoodIndices(int[][] variables, int target) {
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < variables.length; i++) {
+            int[] v = variables[i];
+            int a = v[0], b = v[1], c = v[2], d = v[3];
+            BigInteger res = (BigInteger.valueOf(a).modPow(BigInteger.valueOf(b), BigInteger.valueOf(10))).modPow(BigInteger.valueOf(c),BigInteger.valueOf(d));
+            if(res.intValue() == target){
+                ans.add(i);
+            }
+        }
+        return ans;
+    }
+    public long countSubarrays(int[] nums, int k) {
+        long ans = 0;
+        int n = nums.length;
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            if(nums[i]>max){
+                max = nums[i];
+            }
+        }
+        int[] sum = new int[n+1];
+        for (int i = 0; i < n; i++) {
+            sum[i+1] = sum[i] + (nums[i] == max?1:0);
+        }
+        int loc = 0;
+        for (int i = 1; i <= n; i++) {
+            if(sum[i]>=k){
+                int d = sum[i] - k;
+                while (sum[loc]<=d){
+                    loc++;
+                }
+                ans += (loc);
+            }
+        }
+        return ans;
+    }
+
+    public int numberOfGoodPartitions(int[] nums) {
+        Map<Integer,Integer> map = new HashMap<>();
+        int n = nums.length;
+        List<int[]> g = new ArrayList<>();
+        for (int i = n-1; i >=0; i--) {
+            if(!map.containsKey(nums[i])){
+                map.put(nums[i], i);
+            }
+        }
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            if(set.contains(nums[i])){
+                continue;
+            }
+            if(map.containsKey(nums[i])){
+                set.add(nums[i]);
+                if(map.get(nums[i])!=i){
+                    g.add(new int[]{i, map.get(nums[i])});
+                    map.remove(nums[i]);
+                }
+            }
+        }
+        g.sort((a, b) -> {
+            if (a[0] - b[0] == 0) {
+                return a[1] - b[1];
+            }
+            return a[0] - b[0];
+        });
+        for (int i = 0; i <g.size(); i++) {
+            int loc = i+1;
+            while (loc<g.size()){
+                if(g.get(loc)[0]<g.get(loc-1)[1]){
+                    loc++;
+                }
+            }
+            n -= g.get(loc-1)[1] - g.get(i)[0];
+
+            i = loc-1;
+
+        }
+        BigInteger ans = BigInteger.valueOf(2).modPow(BigInteger.valueOf(n-1), BigInteger.valueOf((int)1e9+7));
+        return ans.intValue();
 
     }
+
 }

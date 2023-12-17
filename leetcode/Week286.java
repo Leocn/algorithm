@@ -54,7 +54,7 @@ public class Week286 {
             }else {
                 // new StringBuilder().append(s).reverse().substring( intLength%2)
                 // 先反转s，根据intLength 是否为偶数，截取s
-                ans[i] = Long.valueOf(s + new StringBuilder().append(s).reverse().substring( intLength%2));
+                ans[i] = Long.parseLong(s + new StringBuilder().append(s).reverse().substring( intLength%2));
             }
 
         }

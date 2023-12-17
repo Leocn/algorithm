@@ -32,7 +32,6 @@ public class ABC262C {
         if(sum>1){
             ans+=a;
         }
-
         System.out.println(ans);
     }
 }

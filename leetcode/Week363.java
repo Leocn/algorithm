@@ -1,87 +1,61 @@
 package com.example.demo.leetcode;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Week363 {
-    public static void main(String[] args) {
-        System.out.println(2 | 5 );
-        System.out.println(2 | 5 ^ 5);
 
-        System.out.println(areNumbersAscending("4 5 11 26"));
-        System.out.println(countMaxOrSubsets(new int[]{3,2,1,5}));
-    }
-
-    public static boolean areNumbersAscending(String s) {
-
-        int before =0 ;
-        for (int i = 0; i < s.length(); i++) {
-            int endIndex;
-            if(s.charAt(i)>=49 && s.charAt(i)<=57){
-                endIndex = i+1;
-                while (endIndex<s.length() &&s.charAt(endIndex)>=48 && s.charAt(endIndex)<=57 ){
-                    endIndex++;
-                }
-                int newBefore = Integer.parseInt(s.substring(i,endIndex));
-                System.out.println(newBefore);
-                if(newBefore>before){
-                    before = newBefore;
-                    i=endIndex-1;
-
-                } else {
-                    return false;
-                }
-
+    public int sumIndicesWithKSetBits(List<Integer> nums, int k) {
+        int ans = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            int c = Integer.bitCount(i);
+            if(c==k){
+                ans+= nums.get(i);
             }
         }
-
-        return true;
+        return ans;
     }
 
+    public int countWays(List<Integer> nums) {
+        Collections.sort(nums);
+        int n = nums.size();
+        int ans = 1;
+        for (int i = 0; i < n-1; i++) {
+            int c = i+1;
+            if(c>nums.get(i) && c<nums.get(i+1)){
+                ans++;
+            }
 
-    public static int countMaxOrSubsets(int[] nums) {
-
-        TreeMap<Integer,Integer> treeMap= new TreeMap<>();
-
-        backtracking(treeMap , 0,nums, 0);
-
-        return treeMap.get(treeMap.lastKey());
-
-    }
-    private static void backtracking(TreeMap<Integer,Integer> treeMap, int sum,
-                                     int[] nums, int index ){
-        if(treeMap.get(sum)!=null){
-            treeMap.put(sum,treeMap.get(sum)+1);
-        }else {
-            treeMap.put(sum,1);
         }
+        if(nums.get(0)!=0 ) ans++;
+        return ans;
+    }
 
-        for (int i = index; i < nums.length; i++) {
-            int tem = sum;
-            sum = sum | nums[i];
 
-            backtracking(treeMap, sum, nums, i+1);
-            sum =tem;
+    public int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> composition, List<Integer> stock, List<Integer> cost) {
+        int ans = 0;
+        for(List<Integer> list : composition){
+            long l = 0 , r = Integer.MAX_VALUE;
+            while (l<r){
+                long mid = l+r>>1;
+                long sum = 0;
+                for (int i = 0; i < n; i++) {
+                    if(mid*list.get(i)>stock.get(i)){
+                        sum += (long)cost.get(i) *((long) mid *list.get(i)-stock.get(i));
+                    }
+                }
+                if(sum>budget){
+                    r = mid;
+                }else {
+                    l = mid+1;
+                }
+            }
+            ans = Math.max(ans, (int)l-1);
         }
+        return ans;
+
 
     }
-//    public static List<List<Integer>> subsets(int[] nums) {
-//        List<List<Integer>> res = new ArrayList<>();
-//        if(nums.length == 0 ) return res;
-//        LinkedList<Integer> list = new LinkedList<>();
-//        backtracking(list, res, nums,0);
-//        return res;
-//    }
-//
-//    private static void backtracking(LinkedList<Integer> list, List<List<Integer>> res,
-//                                     int[] nums, int index){
-//        res.add(new ArrayList<>(list));
-//
-//        for (int i = index; i < nums.length; i++) {
-//            list.add(nums[i]);
-//            backtracking(list, res, nums, i+1);
-//            list.removeLast();
-//        }
+
+
+
 }

@@ -1,11 +1,8 @@
 package com.example.demo.leetcode;
 
-import cn.hutool.core.lang.tree.Tree;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeMap;
 
 public class Week88D {
     public static void main(String[] args) {
@@ -91,56 +88,45 @@ public class Week88D {
         return ans;
     }
 
-    int[] sum;
-    int n;
-    public long numberOfPairs(int[] nums1, int[] nums2, int diff) {
-        int n = nums1.length;
-        int[] arr = new int[n];
-        for (int i = 0; i < n; i++) {
-            arr[i] = nums1[i]-nums2[i];
+    //线段树结构
+    int[] tree = new int[100001];
+    int n =0;
+    private int lowBit(int x){
+        return x & (-x);
+    }
+    private void add(int x, int a){
+        System.out.println(x);
+        while(x<=100001){
+            tree[x] += a;
+            x += lowBit(x);
         }
-
-        sum = new int[n*4];
-        Arrays.fill(sum,Integer.MAX_VALUE);
-        for (int i = 0; i < n; i++) {
-            add(1, 1,n, i+1, arr[i]);
-        }
-
-        long ans = 0;
-        for (int i = 0; i < n-1; i++) {
-           ans += query(1,1,n, i+2,n, arr[i]-diff);
+    }
+    private int query(int x){
+        int ans = 0;
+        while(x>0){
+            ans += tree[x];
+            x -= lowBit(x);
         }
         return ans;
     }
-    public void add(int k, int left, int right, int index, int val){
-        sum[k] = Math.min(val, sum[k]);
-        if(left==right){
-            return;
-        }
-        int m = left+right>>1;
-        if(m>=index){
-            add(2*k, left, m, index, val);
-        }else{
-            add(2*k+1, m+1, right, index, val);
-        }
-    }
+    /***
+     计算逆序对, 树状数组
+     */
 
-    public long query(int k, int left, int right, int L, int R, int val){
-        if(val <=sum[k]){
-            return R-L+1;
+    public long numberOfPairs(int[] nums1, int[] nums2, int diff) {
+        int M = 30001;
+        n = nums1.length;
+        int[] arr  = new int[n];
+        for(int i =0; i<n; i++){
+            arr[i] = nums1[i]- nums2[i];
         }
-        if(L==R){
-            return 0;
+        long ans = 0;
+        add(arr[0]+M,1);
+        for(int i=1; i<n; i++){
+            ans += query(arr[i]+M+diff);
+            add(arr[i]+M,1);
         }
-
-        int m = left+right>>1;
-        if(m<L){
-            return query(2*k+1, m+1, right, L, R,val);
-        }else if (m>= R){
-            return query(2*k, left, m, L, R,val);
-        }else{
-            return query(2*k, left, m, L, m,val) + query(2*k+1, m+1, right, m+1, R,val);
-        }
+        return ans;
 
     }
 

@@ -1,92 +1,244 @@
 package com.example.demo.leetcode;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.*;
 
 public class Week364 {
-    public static void main(String[] args) {
-        System.out.println(countValidWords(" 62   nvtk0wr4f  8 qt3r! w1ph 1l ,e0d 0n 2v 7c.  n06huu2n9 s9   ui4 nsr!d7olr  q-, vqdo!btpmtmui.bb83lf g .!v9-lg 2fyoykex uy5a 8v whvu8 .y sc5 -0n4 zo pfgju 5u 4 3x,3!wl  fv4   s  aig cf j1 a i  8m5o1  !u n!.1tz87d3 .9    n a3  .xb1p9f  b1i a j8s2 cugf l494cx1! hisceovf3 8d93 sg 4r.f1z9w   4- cb r97jo hln3s h2 o .  8dx08as7l!mcmc isa49afk i1 fk,s e !1 ln rt2vhu 4ks4zq c w  o- 6  5!.n8ten0 6mk 2k2y3e335,yj  h p3 5 -0  5g1c  tr49, ,qp9 -v p  7p4v110926wwr h x wklq u zo 16. !8  u63n0c l3 yckifu 1cgz t.i   lh w xa l,jt   hpi ng-gvtk8 9 j u9qfcd!2  kyu42v dmv.cst6i5fo rxhw4wvp2 1 okc8!  z aribcam0  cp-zp,!e x  agj-gb3 !om3934 k vnuo056h g7 t-6j! 8w8fncebuj-lq    inzqhw v39,  f e 9. 50 , ru3r  mbuab  6  wz dw79.av2xp . gbmy gc s6pi pra4fo9fwq k   j-ppy -3vpf   o k4hy3 -!..5s ,2 k5 j p38dtd   !i   b!fgj,nx qgif "));
-    }
-    /**
-     * 句子中的有效单词数
-     * */
-    public static int countValidWords(String sentence) {
-        String[] array = sentence.split(" ");
-        int count = 0;
-        for (int i = 0; i < array.length; i++) {
-            if(isValidWords(array[i])){
-                count++;
+    public String maximumOddBinaryNumber(String s) {
+        char[] cs = s.toCharArray();
+        int x = 0, y = 0;
+        for(char c: cs){
+            if(c=='0'){
+                x++;
+            }else {
+                y++;
             }
         }
-        return count;
-    }
-    private static boolean isValidWords(String str){
-        if(str.length()==0) return false;
-        char[] chars = str.toCharArray();
-        int count = 0;
-        for (int i = 0; i < chars.length; i++) {
-            if( (chars[i] >=97 && chars[i]<=122) || (chars[i] == 45 && count<1 && i!=0 && i!=chars.length-1 )  ||
-                    ((chars[i] ==44 || chars[i] == 33 || chars[i] == 46) &&i == chars.length-1 && (i-1<0 ||chars[i-1]!=45)  ) ){
-                if(chars[i] == 45){
-                    count++;
-                }
-            }else {return false;}
-        }
-        return true;
-
+        String ans = "1".repeat(y-1);
+        ans += "0".repeat(x);
+        ans +="1";
+        return  ans;
     }
 
-    /**
-     * 下一个更大的数值平衡数
-     * */
-//    public static int nextBeautifulNumber(int n) {
+    public long maximumSumOfHeights(List<Integer> maxHeights) {
+//        long ans = 0;
+//        int n = maxHeights.size();
+//        long[] l = new long[n];
+//        long min = maxHeights.get(0);
+//        l[0] = min;
+//        for (int i = 1; i <n ; i++) {
+//            l[i] = Math.min(l[i-1], maxHeights.get(i));
+//        }
 //
-//    }
-
-
-    /**
-     * 5909. 并行课程 III
-     * */
-    public static int minimumTime(int n, int[][] relations, int[] time) {
-        int[] inDegree = new int[n];
-        HashSet<Integer>[] adj = new HashSet[n];
+//        min = maxHeights.get(n-1);
+//        long[] r = new long[n];
+//        r[n-1] = min;
+//        for (int i = n-2; i >=0 ; i--) {
+//            r[i] = Math.min(r[i+1], maxHeights.get(i));
+//        }
+//
+//        long[] sumL = new long[n+1];
+//        for (int i = 0; i < n; i++) {
+//            sumL[i+1] = sumL[i] + l[i];
+//        }
+//
+//        long[] sumR = new long[n+1];
+//        for (int i = n-1; i >=0 ; i--) {
+//            sumR[i] = sumR[i+1] + r[i];
+//        }
+//
+//        for (int i = 0; i < n; i++) {
+//            long sum = sumL[n]- sumL[i] + sumR[0] - sumR[i];
+//            System.out.println(i + " " + sum);
+//            ans = Math.max(sum, ans);
+//        }
+//        return ans;
+        int n = maxHeights.size();
+        int[] arr = new int[n];
         for (int i = 0; i < n; i++) {
-            adj[i] = new HashSet<>();
+            arr[i] = maxHeights.get(i);
         }
-
-        for (int[] p : relations) {
-            inDegree[p[0]-1]++;
-            adj[p[1]-1].add(p[0]-1);
+        long[] left = new long[n];
+        long[] right = new long[n];
+        Deque<Integer> stack = new LinkedList<>();
+        for(int i = 0;i < n;i++) {
+            while(!stack.isEmpty() && arr[i] < arr[stack.peek()]) {
+                stack.pop();
+            }
+            if(stack.isEmpty()) {
+                left[i] = (long) arr[i] * (i + 1);
+            } else {
+                left[i] = (long) arr[i] * (i - stack.peek()) + left[stack.peek()];
+            }
+            stack.push(i);
         }
-
-        Queue<Integer> queue = new LinkedList<>();
-
-        //每门课程的结束的最早时间
-        int[] res = new int[n];
-        Arrays.fill(res, Integer.MIN_VALUE);
-        // 首先加入入度为 0 的结点
-        for (int i = 0; i < n; i++) {
-            if (inDegree[i] == 0) {
-                res[i] = time[i];
-                queue.add(i);
+        stack.clear();
+        for(int i = n - 1;i >= 0;i--) {
+            while(!stack.isEmpty() && arr[i] < arr[stack.peek()]) {
+                stack.pop();
+            }
+            if(stack.isEmpty()) {
+                right[i] = (long) arr[i] * (n - i);
+            } else {
+                right[i] = (long) arr[i] * (stack.peek() - i) + right[stack.peek()];
+            }
+            stack.push(i);
+        }
+        int idx = 0;
+        long max = 0L;
+        for(int i = 0;i < n;i++) {
+            long l = left[i] + right[i] - arr[i];
+            if(max < l) {
+                max = l;
+                idx = i;
             }
         }
-
-        // 记录每个课程的最大值
-
-        while (!queue.isEmpty()) {
-            Integer top = queue.poll();
-            // 遍历当前出队结点的所有后继结点
-            for (int successor : adj[top]) {
-                res[successor] = Math.min(time[successor] + res[top],res[successor]) ;
-                inDegree[successor]--;
-                if (inDegree[successor] == 0) {
-                    queue.add(successor);
-                }
+        long[] ans = new long[n];
+        ans[idx] = arr[idx];
+        long prev = arr[idx];
+        for(int i = idx - 1;i >= 0;i--) {
+            if(arr[i] < prev) {
+                prev = arr[i];
             }
+            ans[i] = prev;
         }
-        return Arrays.stream(res).max().orElse(0);
+        prev = arr[idx];
+        for(int i = idx + 1;i < n;i++) {
+            if(arr[i] < prev) {
+                prev = arr[i];
+            }
+            ans[i] = prev;
+        }
+        long res = 0;
+        for (int i = 0; i < n; i++) {
+            res += ans[i];
+        }
+        return res;
+
+
+
     }
+
+    public static List<Integer> getPrimesLe(int n) {
+        boolean[] arr = new boolean[n+1];
+        Arrays.fill(arr, true);
+        arr[1] = false;
+        int p = 2;
+        int r = (int) (1 + Math.sqrt(n));
+        while (p <= r) {
+            int v = p + p;
+            while (v <= n) {
+                arr[v] = false;
+                v += p;
+            }
+            p++;
+            while (p <= r && !arr[p]) {
+                p++;
+            }
+        }
+
+        List<Integer> primes = new ArrayList<>();
+        for (int i = 2; i <= n; i++) {
+            if (arr[i]) {
+                primes.add(i);
+            }
+        }
+        //show(primes);
+        return primes;
+    }
+
+    static Set<Integer> PRIMES;
+    static {
+        PRIMES = new HashSet<>(getPrimesLe((int)1e5));
+    }
+    static ArrayList<Integer>[] g;
+    int[] count;
+    public long countPaths(int n, int[][] edges) {
+        long ans = 0;
+        g = new ArrayList[n+1];
+        count = new int[n+1];
+        for (int i = 1; i <=n ; i++) {
+            g[i] = new ArrayList<>();
+        }
+        for(int[] e: edges){
+            g[e[0]].add(e[1]);
+            g[e[1]].add(e[0]);
+        }
+        for (int i = 1; i <=n ; i++) {
+            if(!PRIMES.contains(i)) continue;
+            List<Integer> list = g[i];
+            int sum = 0;
+            for(int c: list){
+                if(PRIMES.contains(c)) continue;
+                List<Integer> nodes = new ArrayList<>();
+                if(count[c]==0){
+                    count[c] = dfs(c,i,nodes);
+                    for(int u: nodes){
+                        count[u] = count[c];
+                    }
+                }
+                int cnt = count[c];
+                ans += (long)cnt*sum;
+                ans += cnt;
+                sum += cnt;
+            }
+        }
+        return ans;
+    }
+
+    private int dfs(int c, int p, List<Integer> nodes){
+        List<Integer> list = g[c];
+        nodes.add(c);
+        int res = 1;
+        for(int nx: list){
+            if(nx == p) continue;
+            if(PRIMES.contains(nx)) continue;
+            res += dfs(nx, c,nodes);
+        }
+        return res;
+    }
+
+
+    public static void main(String[] args) {
+        List<int[]> list = new ArrayList<>();
+        int loc = 2;
+        for (int p: PRIMES) {
+            while (loc<=100000 && PRIMES.contains(loc)) {
+                loc++;
+            }
+            list.add(new int[]{loc, 1});
+            list.add(new int[]{loc, p});
+            loc++;
+        }
+        while (loc<=100000){
+            if(!PRIMES.contains(loc)) {
+                list.add(new int[]{loc,1});
+            }
+            loc++;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for(int[] i : list){
+            sb.append(Arrays.toString(i)).append(",");
+        }
+        sb.deleteCharAt(sb.length()-1);
+        sb.append("]");
+        System.out.println(sb);
+        FileOutputStream f = null;
+        try {
+            f = new FileOutputStream("C:\\Users\\J1J\\Desktop\\新建文本文档.txt");
+            BufferedOutputStream b = new BufferedOutputStream(f);
+            b.write(sb.toString().getBytes());
+            b.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
 }

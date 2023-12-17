@@ -1,117 +1,139 @@
 package com.example.demo.leetcode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 
 public class Week374 {
+    public static void main(String[] args) {
 
-    public boolean checkString(String s) {
-        char[] chars = s.toCharArray();
-        int count =0;
-        for (int i = 0; i < chars.length; i++) {
-            if(chars[i] =='b'){
-                count ++;
-            }
-            if(chars[i] =='a' && count>0){
-                return  false;
-            }
-        }
-        return  true;
     }
 
-
-    public int numberOfBeams(String[] bank) {
-        //int n = bank.length;
-        //int m = bank[0].length();
-        int res = 0;
-        int countB = 0;
-        for (String s : bank) {
-            int count = 0;
-            for (int j = 0; j < s.length(); j++) {
-                if (s.charAt(j) == '1') {
-                    count++;
-                }
+    public List<Integer> findPeaks(int[] mountain) {
+        List<Integer> ans = new ArrayList<>();
+        int n = mountain.length;
+        for (int i = 1; i < n-1; i++) {
+            if(mountain[i]>mountain[i-1] && mountain[i]>mountain[i+1]){
+                ans.add(i);
             }
-            System.out.println(count);
+        }
+        return ans;
+    }
 
-            res += count * countB;
+    public int minimumAddedCoins(int[] coins, int target) {
+        Arrays.sort(coins);
+        int s = 0, loc = 0, n = coins.length, ans = 0;
+        while (s<=target){
+            if(loc < n && coins[loc] <= s+1){
+                s += coins[loc++];
+            }else {
+                ans++;
+                s += s+1;
+            }
+        }
+        return ans;
+    }
+    public int countCompleteSubstrings(String word, int k) {
+        int n = word.length();
+        char[] cs = word.toCharArray();
+        int pre = 0, ans = 0;
+        for (int i = 1; i < n; i++) {
+            if(Math.abs(cs[i]-cs[i-1])>2){
+                ans += cal(word.substring(pre, i), k);
+                pre = i;
+            }
+        }
+        ans += cal(word.substring(pre,n), k);
+        return ans;
+    }
+    private int cal(String s, int k){
+        int ans = 0, n = s.length();
+        char[] cs = s.toCharArray();
+        char[][] cnt = new char[n+1][26];
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(cnt[i], 0, cnt[i + 1], 0, 26);
+            cnt[i+1][cs[i]-'a']++;
+        }
+        for (int i = 0; i < n; i++) {
+            out:for (int j = 1; j <=26;j++) {
+                int x = i+k*j;
+                if(x>n){
+                    break;
+                }
+                for (int l = 0; l < 26; l++) {
+                    if(cnt[x][l] - cnt[i][l] != k){
+                        continue out;
+                    }
+                }
+                System.out.println(111);
+                ans++;
+            }
+        }
+        return ans;
+    }
 
-            countB = count>0?count: countB;
+    static int mod = (int)1e9+7;
+    static long[] fac = fac(100005, mod);
+    static long[] facR = facR(100005, mod);
+    public int numberOfSequence(int n, int[] sick) {
 
+        int m = sick.length;
+        int k = n - m;
+        long ans = comb(k, sick[0]) * comb(k-sick[0],(n-1-sick[m-1])) %mod;
+        k -= sick[0] + (n-1-sick[m-1]);
+        int sum = 0;
+        for (int i = 1; i < m ; i++) {
+            int d = sick[i] - sick[i-1] - 1;
+            if(d>0){
+                ans = ans * comb(k, d)%mod;
+                sum += d - 1;
+                k -= d;
+            }
+        }
+        ans = ans*pow(2, sum, mod) % mod;
+
+        return  (int)ans;
+    }
+
+    private static long comb(int a, int b) {
+        if (a < b) return 0;
+        return combine(a, b, mod);
+    }
+    //递推求阶乘
+    static long[] fac(int n, long p) {
+        long[] f = new long[n + 1];
+        f[0] = f[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            f[i] = f[i - 1] * i % p;
+        }
+        return f;
+    }
+
+    //facR
+    static long[] facR(int n, long p) {
+        long[] fr = new long[n + 1];
+        fr[n] = pow(fac[n], p - 2, p) ;
+        for (int i = n-1; i>=0 ; i--) {
+            fr[i] = fr[i + 1] * (i+1) % p;
+        }
+        return fr;
+    }
+
+    //快速幂 x^k mod p
+    static long pow(long x, long k, long p) {
+        long res = 1;
+        while (k != 0) {
+            if ((k & 1) != 0) res = res * x % p;
+            x = x * x % p;
+            k >>= 1;
         }
         return res;
     }
 
 
-    public boolean asteroidsDestroyed(int mass, int[] asteroids) {
-        Arrays.sort(asteroids);
-        long all = mass;
-        for(int a: asteroids){
-            if(a<=all){
-                all += a;
-            }else {
-                return false;
-            }
-
-        }
-        return true;
+    //公式法求组合数 O(NlogP)  结合逆元  求  C(a,b) mod p      a!/(b! (a-b)!)   1≤b≤a≤10^5
+    static long combine(int a, int b, int p) {
+        //先预处理出阶乘   然后 每次 常数时间求解
+        return (fac[a] * facR[b] % p) * facR[a - b] % p;
     }
-
-
-    public int maximumInvitations(int[] favorite) {
-        int n = favorite.length;
-        Queue<Integer> queue = new LinkedList<>();
-        //入度大小
-        int[] count = new int[n];
-        for (int i = 0; i < n; i++) {
-            count[favorite[i]]++;
-        }
-        int[] maxLen = new int[n];
-        for (int i = 0; i < n; i++) {
-            if(count[i]==0){
-                queue.add(i);
-            }
-        }
-        //剪枝，剩余count[i]>0的都是成环的
-        while (!queue.isEmpty()){
-            int po = queue.poll();
-            maxLen[po]++;
-            int w = favorite[po];
-            //记录枝条上的最大长度，方便计算基环大小为2时最大的值 sumChainSize
-            maxLen[w] = Math.max(maxLen[po], maxLen[w]);
-            if(--count[w]==0){
-                queue.add(w);
-            }
-        }
-
-        int maxRingSize = 0, sumChainSize = 0;
-        for (int i = 0; i < n; i++) {
-            if(count[i] ==0){
-                continue;
-            }
-            count[i]=0;
-            int ringSize = 1;
-            int next = favorite[i];
-            //计算环的大小
-            while (next !=i){
-                count[next]=0;
-                ringSize++;
-                next = favorite[next];
-            }
-            //环大小为2
-            if(ringSize==2){
-                //+= 是因为可能有多个大小为2的环组成一个大桌
-                sumChainSize += maxLen[i]+ maxLen[favorite[i]] +2;
-            }else {
-                // 只能存在一个大环
-                maxRingSize = Math.max(maxRingSize, ringSize);
-            }
-            
-        }
-
-        return Math.max(sumChainSize, maxRingSize);
-
-    }
-
 }

@@ -1,87 +1,101 @@
 package com.example.demo.leetcode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.PriorityQueue;
 
 public class Week372 {
+    public static void main(String[] args) {
 
-
-    public String firstPalindrome(String[] words) {
-        for (String word: words){
-            if(valid(word)){
-                return  word;
+    }
+    public int findMinimumOperations(String s1, String s2, String s3) {
+        int n = 101;
+        n = Math.min(n, s1.length());
+        n = Math.min(n, s2.length());
+        n = Math.min(n, s3.length());
+        for (int i = n-1; i >=0 ; i--) {
+            if(s1.substring(0,i+1).equals(s2.substring(0,i+1)) && (s2.substring(0,i+1).equals(s3.substring(0,i+1))) ){
+                return s1.length() + s2.length() + s3.length() - (i+1)*3;
             }
         }
-        return "";
+        return -1;
     }
 
-    boolean valid(String word){
-        int l = 0;
-        int r = word.length()-1;
-        while (l<r){
-            if(word.charAt(l) != word.charAt(r)){
-                return false;
+    public long minimumSteps(String s) {
+        long sum = 0, ans = 0;
+        char[] cs = s.toCharArray();
+        for(char c: cs){
+            if(c=='1'){
+                sum++;
+            }else {
+                ans += sum;
             }
-            l++;
-            r--;
         }
-        return true;
+        return ans;
+
     }
 
 
-    public String addSpaces(String s, int[] spaces) {
-        StringBuilder sb = new StringBuilder(s);
-        int count = 0;
-        for(int space: spaces){
-            sb.insert(space+count, " ");
-            count++;
+    public int maximumXorProduct(long a, long b, int n) {
+        if(a<b){
+            long tem = a;
+            b = a;
+            a = tem;
+
         }
-        return  new String(sb);
+        long mask = (1L<<n) - 1;
+        long ansA = a & (~mask), aR = a & (mask);
+        long ansB = b & (~mask), bR = b & (mask);
+        long r = aR ^ bR;
+        long one = mask ^ r;
+        ansA |= one;
+        ansB |= one;
+
+        if(r>0 && ansA == ansB){
+            long highBit = 1L << (63 - Long.numberOfLeadingZeros(r));
+            ansA |= highBit;
+            r ^= highBit;
+
+        }
+        ansB |= r;
+        final long MOD = 1_000_000_007;
+        return (int) (ansA % MOD * (ansB % MOD) % MOD);
+
     }
 
-    public long getDescentPeriods(int[] prices) {
-        long res = 0;
-        int l = prices.length;
-        long[] dp = new long[l];
-        for(int i=1; i<l; i++){
-            if(prices[i]- prices[i-1]==1){
-                dp[i] = dp[i-1]+1;
+    public int[] leftmostBuildingQueries(int[] heights, int[][] queries) {
+        int n = heights.length;
+        ArrayList<int[]>[] arr = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = new ArrayList<>();
+        }
+        int q = queries.length;
+        int[] ans = new int[q];
+        Arrays.fill(ans, -1);
+        for (int i = 0; i < q; i++) {
+            int[] qu = queries[i];
+            int a = qu[0], b = qu[1];
+            if(a>b){
+                int tem = b;
+                b = a;
+                a = tem;
             }
-            res += dp[i];
-        }
-        return res +l;
-    }
-
-    public int kIncreasing(int[] arr, int k) {
-        //Map<Integer, List<Integer>> map = new HashMap<>();
-        int res = 0;
-        //List[] ar = new List[k];
-//        for(int i=0; i<k;i++){
-//            ar[i] = new ArrayList<>();
-//        }
-        int[] dp = new int[k];
-        for(int i=0; i<k;i++){
-            dp[i] = Integer.MIN_VALUE;
-        }
-        int[] count = new int[k];
-        int[] ll = new int[k];
-
-        for(int i = 0; i<arr.length; i++){
-            int dd = i%k;
-            //ar[dd].add(arr[i]);
-            if( dp[dd]>arr[i]){
-                //dp[dd]++;
-                count[dd]++;
+            if(a == b || heights[a]<heights[b]){
+                ans[i] = b;
+            }else {
+                arr[b].add(new int[]{heights[a], i});
             }
-            ll[dd]++;
-            dp[dd] = arr[i];
         }
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->a[0]-b[0]);
 
-        for(int i =0; i<k; i++){
-            res += count[i];
+        for (int i = 0; i < n; i++) {
+            while (pq.size()>0 && pq.peek()[0]<heights[i]){
+                ans[pq.poll()[1]] = i;
+            }
+            pq.addAll(arr[i]);
         }
-        return res;
-
-
+        return ans;
 
     }
+
 }
