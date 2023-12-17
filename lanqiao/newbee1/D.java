@@ -3,15 +3,20 @@ package com.example.demo.lanqiao.newbee1;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.InputMismatchException;
 
+/**
+ * 贪心所有数乘积相加
+ *
+ * */
 public class D {
     static RealFastReader sc = new RealFastReader(System.in);
     static PrintWriter out = new PrintWriter(System.out);
 
     public static void main(String[] args) {
-        int t = sc.ni();
+        int t = 1;
         while (t-- > 0) {
             solve();
         }
@@ -21,6 +26,13 @@ public class D {
     public static void solve() {
         int n = sc.ni();
         int[] g = sc.na(n);
+        BigInteger s = new BigInteger("0");
+        BigInteger ans = new BigInteger("0");
+        for (int i = 0; i < n; i++) {
+            ans = ans.add(s.multiply(new BigInteger(g[i]+"")));
+            s = s.add(new BigInteger(g[i]+""));
+        }
+        out.println(ans);
 
     }
 
