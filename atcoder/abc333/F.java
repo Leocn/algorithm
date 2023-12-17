@@ -21,12 +21,30 @@ public class F {
     public static void solve() {
         int mod = 998244353;
         int n = sc.ni();
-        long[] dp = new long[n+1];
+        long[] twoInverse = new long[n+1];
         long f  = FermatInv(2, mod);
-        dp[0] = 1;
+        twoInverse[0] = 1;
         for (int i = 1; i <=n; i++) {
-            dp[i] = dp[i-1] *f %mod;
+            twoInverse[i] = twoInverse[i-1] *f %mod;
         }
+        long[][] dp = new long[n+1][n+1];
+        dp[1][1] = 1;
+        for (int i = 2; i <=n ; i++) {
+            long q = FermatInv((1- twoInverse[i] + mod) %mod, mod);
+            long sum = 0;
+            for (int j = 1; j <= i-1; j++) {
+                sum = (sum +dp[i-1][j]*twoInverse[i-j+1]) % mod;
+            }
+            dp[i][1] = sum * q % mod;
+            for (int j = 2; j <=i ; j++) {
+                dp[i][j] = (dp[i][j-1] + dp[i-1][j-1])* twoInverse[1] %mod;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <=n ; i++) {
+            sb.append(dp[n][i]).append(" ");
+        }
+        out.println(sb);
 
     }
     static long PowMod(long a, long n, long mod)
