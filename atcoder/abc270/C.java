@@ -1,17 +1,16 @@
 package com.example.demo.atcoder.abc270;
 
-import java.sql.Array;
 import java.util.*;
 
 public class C {
-    static List[] arr;
+    static ArrayList[] arr;
     static  boolean[] vis;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int x = sc.nextInt();
         int y = sc.nextInt();
-        arr =  new List[n+1];
+        arr =  new ArrayList[n+1];
         for (int i = 1; i < n+1; i++) {
             arr[i] = new ArrayList();
         }

@@ -1,6 +1,5 @@
 package com.example.demo.leetcode;
 
-import cn.hutool.core.lang.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.Collections;

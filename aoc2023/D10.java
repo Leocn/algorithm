@@ -1,7 +1,5 @@
 package com.example.demo.aoc2023;
 
-import cn.hutool.core.lang.Pair;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -81,7 +79,7 @@ public class D10 {
         map.put('F', f);
 
         int[][] dirs = new int[][]{{1,0},{-1,0},{0,1},{0,-1}};
-        Deque<Pair<int[], int[]>> dq = new ArrayDeque<>();
+        Deque<int[][]> dq = new ArrayDeque<>();
 
         for(int[] dir:dirs){
             int x = sx + dir[0];
@@ -104,7 +102,7 @@ public class D10 {
             if((dir[0] == 0 && dir[1]==-1) || (dir[0]==-1 && dir[1] == 0)){
                 vis[x][y] = true;
 
-                dq.add(new Pair<>(dir, new int[]{x,y}));
+                dq.add( new int[][]{dir,new int[]{x,y} });
             }
 
 
@@ -125,9 +123,9 @@ public class D10 {
             int size = dq.size();
             ans++;
             while (size-->0){
-                Pair<int[], int[]> p = dq.poll();
-                int[] key = p.getKey();
-                int[] v = p.getValue();
+                int[][] p = dq.poll();
+                int[] key = p[0];
+                int[] v = p[1];
 
                 char ch = cs[v[0]][v[1]];
                 //out.println(v[0] + " " + v[1]  + " " + ans);
@@ -149,7 +147,7 @@ public class D10 {
                 }
                 vis[x][y] = true;
 
-                dq.add(new Pair<>(nd, new int[]{x,y}));
+                dq.add(new int[][]{nd, new int[]{x,y} });
             }
 
         }
