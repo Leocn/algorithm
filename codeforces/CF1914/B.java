@@ -20,6 +20,15 @@ public class B {
 
     public static void solve() {
        int n = sc.ni(), k = sc.ni();
+       StringBuilder sb = new StringBuilder();
+        for (int i = n; i >k+1; i--) {
+            sb.append(i).append(" ");
+        }
+        for (int i = 1; i <=k+1 ; i++) {
+            sb.append(i).append(" ");
+        }
+
+        out.println(sb);
 
     }
 
