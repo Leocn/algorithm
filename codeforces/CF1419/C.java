@@ -31,7 +31,7 @@ public class C {
         int ans = 0;
         if( c == n){
 
-        }else if(sum/n == x && sum%n == 0){
+        }else if(x * n == sum){
             ans = 1;
         }else if(c>0){
             ans = 1;
