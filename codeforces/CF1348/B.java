@@ -3,13 +3,10 @@ package com.example.demo.codeforces.CF1348;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.List;
+import java.util.*;
 
 /**
- * TODO
+ * 贪心
  * */
 public class B {
     static RealFastReader sc = new RealFastReader(System.in);
@@ -27,35 +24,41 @@ public class B {
         int n = sc.ni();
         int k = sc.ni();
         int[] arr =  sc.na(n);
-
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < k; i++) {
-            list.add(arr[i]);
-        }
-
-        int cnt = 0;
-        for (int i = k; i < n; i++) {
-            if(list.get(list.size()-k) == arr[i]){
-                list.add(arr[i]);
-                cnt = 0;
-            }else {
-                list.add(list.get(list.size()-k));
-                i--;
-                cnt++;
-            }
-            if(cnt>=n){
-                out.println(-1);
-                return;
-            }
-        }
-
-
+        int[] g = new int[k];
         StringBuilder sb = new StringBuilder();
-
-        for(int a: list){
-            sb.append(a).append(" ");
+        Set<Integer> set = new HashSet<>();
+        int cnt = 0;
+        for (int i = 0; i < n && cnt<k; i++) {
+            if(set.contains(arr[i])){
+                continue;
+            }
+            set.add(arr[i]);
+            sb.append(arr[i]).append(" ");
+            g[cnt] = arr[i];
+            cnt++;
         }
-        out.println(list.size());
+        while (cnt < k){
+            sb.append(arr[0]).append(" ");
+            g[cnt] = arr[0];
+            cnt++;
+        }
+        int c = 0;
+
+        out:for (int i = 0; i <n ; i++) {
+            for (int j = c; j <c+k ; j++) {
+                cnt++;
+                if(arr[i]== g[j%k]){
+                    sb.append(arr[i]).append(" ");
+                    c = (j+1)%k;
+                    continue out;
+                }
+                sb.append(g[j%k]).append(" ");
+
+            }
+            out.println(-1);
+            return;
+        }
+        out.println(cnt);
         out.println(sb);
     }
 
