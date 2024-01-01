@@ -1,11 +1,10 @@
-package com.example.demo.codeforces.cf817;
+package com.example.demo.codeforces.CF1722;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.InputMismatchException;
-import java.util.Scanner;
 
 /**
  *

@@ -1,4 +1,4 @@
-package com.example.demo.codeforces.cf819;
+package com.example.demo.codeforces.CF1726;
 
 import java.io.PrintWriter;
 import java.util.*;

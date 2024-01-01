@@ -1,4 +1,4 @@
-package com.example.demo.codeforces.cf817;
+package com.example.demo.codeforces.CF1722;
 
 import java.util.Arrays;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-package com.example.demo.codeforces.cf810;
+package com.example.demo.codeforces.CF1711;
 
 import java.util.Scanner;
 

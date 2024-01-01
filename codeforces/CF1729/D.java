@@ -1,4 +1,4 @@
-package com.example.demo.codeforces.cf820;
+package com.example.demo.codeforces.CF1729;
 
 
 import java.io.IOException;
