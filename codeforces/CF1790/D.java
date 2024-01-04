@@ -1,53 +1,39 @@
-package com.example.demo.codeforces.cf847;
+package com.example.demo.codeforces.CF1790;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-public class C {
+public class D {
     static int[] p;
     public static void main(String[] args) {
         RealFastReader r = new RealFastReader(System.in);
         int t = r.ni();
         while (t-->0){
             int n = r.ni();
-            int[][] arr = new int[n][n-1];
+            int[] arr = r.na(n);
+            Integer[] ar = new Integer[n];
+            Map<Integer,Integer> map = new HashMap<>();
             for (int i = 0; i < n; i++) {
-                arr[i] = r.na(n-1);
+                ar[i] = arr[i];
+                map.put(arr[i], map.getOrDefault(arr[i],0)+1);
             }
-            Set[] s = new Set[n-1];
-            for (int i = 0; i < n-1; i++) {
-                s[i] = new HashSet<Integer>();
-                for (int j = 0; j < n; j++) {
-                    s[i].add(arr[j][i]);
-                }
-            }
-            StringBuilder sb = new StringBuilder();
-            Set<Integer> tem = s[0];
-            for(Integer in :  tem){
-                if(!s[1].contains(in)){
-                    sb.append(in).append(" ");
-                }
-            }
-
-            for(Integer in :  tem){
-                if(s[1].contains(in)){
-                    sb.append(in).append(" ");
-                    s[1].remove(in);
-                }
-            }
-
-
-            for (int i = 1; i < n-1; i++) {
-                Set<Integer> d = s[i];
-                for(Integer in : d){
-                    sb.append(in).append(" ");
-                    if(i<n-2){
-                        s[i+1].remove(in);
+            Arrays.sort(ar);
+            int ans = 0;
+            for (int i = 0; i < n; i++) {
+                if(map.getOrDefault(ar[i], 0) == 0){
+                }else {
+                    int tem = ar[i];
+                    while (map.containsKey(tem) && map.get(tem)>0){
+                        map.put(tem,  map.get(tem)-1);
+                        tem++;
                     }
+                    ans++;
                 }
             }
-            System.out.println(sb);
+            System.out.println(ans);
+
+
 
 
 

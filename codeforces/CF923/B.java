@@ -1,48 +1,45 @@
-package com.example.demo.codeforces.cf847;
+package com.example.demo.codeforces.CF923;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.io.PrintWriter;
+import java.util.*;
 import java.util.InputMismatchException;
-import java.util.Map;
 
-public class E {
+public class B {
+    static RealFastReader sc = new RealFastReader(System.in);
+    static PrintWriter out = new PrintWriter(System.out);
+
     public static void main(String[] args) {
-        RealFastReader r = new RealFastReader(System.in);
-        int t = r.ni();
-        out:while (t-->0){
-            long n = r.nl();
-            if(n%2!=0){
-                System.out.println(-1);
-                continue;
-            }
-
-            long a = 0, b = 0;
-            int dis = 1;
-            int start = 0;
-            while (n>>dis>0){
-                if(((n>>dis) & 1) == 1){
-                    if(start==0){
-                        a+=(1L <<(dis-1));
-                        b+=(1L <<(dis-1));
-                    }else{
-                        System.out.println(-1);
-                        continue out;
-                    }
-                    start = 1;
-                }else{
-                    if(start==1){
-                        a+=(1L <<(dis-1));
-                    }
-
-                    start = 0;
-                }
-                dis++;
-            }
-            System.out.println(a + " " + (b+(1L<<(dis-1))));
+        int t = 1;
+        while (t-- > 0) {
+            solve();
         }
+        out.close();
     }
+
+    public static void solve() {
+        int n = sc.ni();
+        int[] g = sc.na(n);
+        int[] w = sc.na(n);
+        PriorityQueue<Long> pq = new PriorityQueue<>();
+        long[] ans = new long[n];
+        long s = 0;
+        for (int i = 0; i < n; i++) {
+            pq.add(s + g[i]);
+            while (pq.size()>0 && pq.peek()<s + w[i]){
+                ans[i] += pq.poll() - s;
+            }
+            ans[i] += (long)pq.size()*(w[i]);
+            s += w[i];
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            sb.append(ans[i]).append(" ");
+        }
+        out.println(sb);
+    }
+
     public static class RealFastReader {
         InputStream is;
 
@@ -184,5 +181,5 @@ public class E {
             }
         }
     }
-
 }
+

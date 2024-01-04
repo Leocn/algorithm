@@ -1,42 +1,44 @@
-package com.example.demo.codeforces.cf847;
+package com.example.demo.codeforces.CF1790;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.InputMismatchException;
 
-public class D {
-    static int[] p;
+public class E {
     public static void main(String[] args) {
         RealFastReader r = new RealFastReader(System.in);
         int t = r.ni();
-        while (t-->0){
-            int n = r.ni();
-            int[] arr = r.na(n);
-            Integer[] ar = new Integer[n];
-            Map<Integer,Integer> map = new HashMap<>();
-            for (int i = 0; i < n; i++) {
-                ar[i] = arr[i];
-                map.put(arr[i], map.getOrDefault(arr[i],0)+1);
+        out:while (t-->0){
+            long n = r.nl();
+            if(n%2!=0){
+                System.out.println(-1);
+                continue;
             }
-            Arrays.sort(ar);
-            int ans = 0;
-            for (int i = 0; i < n; i++) {
-                if(map.getOrDefault(ar[i], 0) == 0){
-                }else {
-                    int tem = ar[i];
-                    while (map.containsKey(tem) && map.get(tem)>0){
-                        map.put(tem,  map.get(tem)-1);
-                        tem++;
+
+            long a = 0, b = 0;
+            int dis = 1;
+            int start = 0;
+            while (n>>dis>0){
+                if(((n>>dis) & 1) == 1){
+                    if(start==0){
+                        a+=(1L <<(dis-1));
+                        b+=(1L <<(dis-1));
+                    }else{
+                        System.out.println(-1);
+                        continue out;
                     }
-                    ans++;
+                    start = 1;
+                }else{
+                    if(start==1){
+                        a+=(1L <<(dis-1));
+                    }
+
+                    start = 0;
                 }
+                dis++;
             }
-            System.out.println(ans);
-
-
-
-
-
+            System.out.println(a + " " + (b+(1L<<(dis-1))));
         }
     }
     public static class RealFastReader {
