@@ -19,6 +19,9 @@ public class C {
     }
     static int mod = (int)1e9+7;
     static long[] pw = pow(2, (int)1e6+5, mod);
+    /**
+     * 组合数 A(N,N) - 2^(N-1)
+     * */
     public static void solve() {
         int n = sc.ni();
         long ans = 1;
