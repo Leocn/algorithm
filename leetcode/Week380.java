@@ -98,6 +98,7 @@ public class Week380 {
     }
     private long get(long mid, int x){
         if(mid == 1) return  1%x==0?1:0;
+        if(mid == 0) return 0;
         String s = Long.toBinaryString(mid);
         s = new StringBuilder(s).reverse().toString();
         char[] cs = s.toCharArray();
@@ -108,12 +109,9 @@ public class Week380 {
                 res += (1L<<(n-2));
             }
         }
-        System.out.println(1+" " +res);
         if(n%x == 0){
             res += mid - (1L<<(n-1)) + 1;
         }
-        System.out.println(2+" " +res);
-        System.out.println(3+" " + (mid - (1L<<n)));
         res += get(mid - (1L<<(n-1)), x);
         return res;
     }
