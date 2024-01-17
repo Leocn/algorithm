@@ -15,92 +15,135 @@ public class D {
         }
         out.close();
     }
+
+    /**
+     *
+     * 求前缀和，正的在1，负的在2
+     */
     public static void solve(){
         int n = sc.ni();
         char[] cs = sc.ns().toCharArray();
-        int c =0 , b = 0;
-        int[] sum = new int[n+1];
-        for (int i = n-1; i >=0; i--) {
-            if(cs[i]=='('){
-                c++;
-                sum[i] = sum[i+1];
-            }else {
-                b++;
-                sum[i] = sum[i+1]+1;
-            }
+        int[] pre = new int[n+1];
+        for (int i = 0; i < n; i++) {
+            pre[i+1] = pre[i] + (cs[i]=='('?1:-1);
         }
-        if(c!=b){
+        if(pre[n]!=0){
             out.println(-1);
             return;
         }
-        Stack<Integer> stack = new Stack<>();
-        List<Integer> list  = new ArrayList<>();
-        int cnt = 0;
-        for (int i = 0; i < n; i++) {
-            if(cs[i]=='('){
-                cnt++;
-                stack.add(i);
+        Integer[] ans = new Integer[n];
+        Set<Integer> set = new HashSet<>();
+        for (int i = 1; i <= n; i++) {
+            if(pre[i] >0){
+                ans[i-1] = 1;
+            }else if(pre[i]<0){
+                ans[i-1] = 2;
             }else {
-                if(cnt!=0){
-                    cnt--;
-                    list.add(stack.pop());
-                    list.add(i);
-                }
-                if(sum[i+1] == 0){
-                    break;
-                }
-
+                ans[i-1] = ans[i-2];
             }
+            set.add(ans[i-1]);
         }
-        List<Integer> list2 = new ArrayList<>();
-        stack = new Stack<>();
-        cnt = 0;
-        for (int i = n-1; i >=0 ; i--) {
-            if(cs[i]=='('){
-                cnt++;
-                stack.add(i);
-            }else {
-                if(cnt!=0){
-                    cnt--;
-                    list2.add(stack.pop());
-                    list2.add(i);
-                }
-            }
-        }
-        int[] ans =  new int[n];
-        Arrays.fill(ans,1);
-
-        if(list2.size()==n){
-            StringBuilder sb = new StringBuilder();
-            for (int a: ans){
-                sb.append(a).append(" ");
-            }
-            out.println(1);
-            out.println(sb);
-            return;
-        }
-
-
-        Arrays.fill(ans,1);
-        if(list.size()!=0 && list.size()!=n){
-            for(int l: list){
-                ans[l] = 2;
-            }
-        }
-
+        int s = set.size();
         StringBuilder sb = new StringBuilder();
-        for (int a: ans){
-            sb.append(a).append(" ");
-        }
-        if(list.size()==0 || list.size()==n){
-            out.println(1);
+        if(s==1){
+            for (int i = 0; i < n; i++) {
+                sb.append(1).append(" ");
+            }
         }else {
-            out.println(2);
+            for (int i = 0; i < n; i++) {
+                sb.append(ans[i]).append(" ");
+            }
         }
+        out.println(s);
         out.println(sb);
 
-
     }
+//    public static void solve(){
+//        int n = sc.ni();
+//        char[] cs = sc.ns().toCharArray();
+//        int c =0 , b = 0;
+//        int[] sum = new int[n+1];
+//        for (int i = n-1; i >=0; i--) {
+//            if(cs[i]=='('){
+//                c++;
+//                sum[i] = sum[i+1];
+//            }else {
+//                b++;
+//                sum[i] = sum[i+1]+1;
+//            }
+//        }
+//        if(c!=b){
+//            out.println(-1);
+//            return;
+//        }
+//        Stack<Integer> stack = new Stack<>();
+//        List<Integer> list  = new ArrayList<>();
+//        int cnt = 0;
+//        for (int i = 0; i < n; i++) {
+//            if(cs[i]=='('){
+//                cnt++;
+//                stack.add(i);
+//            }else {
+//                if(cnt!=0){
+//                    cnt--;
+//                    list.add(stack.pop());
+//                    list.add(i);
+//                }
+//                if(sum[i+1] == 0){
+//                    break;
+//                }
+//
+//            }
+//        }
+//        List<Integer> list2 = new ArrayList<>();
+//        stack = new Stack<>();
+//        cnt = 0;
+//        for (int i = n-1; i >=0 ; i--) {
+//            if(cs[i]=='('){
+//                cnt++;
+//                stack.add(i);
+//            }else {
+//                if(cnt!=0){
+//                    cnt--;
+//                    list2.add(stack.pop());
+//                    list2.add(i);
+//                }
+//            }
+//        }
+//        int[] ans =  new int[n];
+//        Arrays.fill(ans,1);
+//
+//        if(list2.size()==n){
+//            StringBuilder sb = new StringBuilder();
+//            for (int a: ans){
+//                sb.append(a).append(" ");
+//            }
+//            out.println(1);
+//            out.println(sb);
+//            return;
+//        }
+//
+//
+//        Arrays.fill(ans,1);
+//        if(list.size()!=0 && list.size()!=n){
+//            for(int l: list){
+//                ans[l] = 2;
+//            }
+//        }
+//
+//        StringBuilder sb = new StringBuilder();
+//        for (int a: ans){
+//            sb.append(a).append(" ");
+//        }
+//        if(list.size()==0 || list.size()==n){
+//            out.println(1);
+//        }else {
+//            out.println(2);
+//        }
+//        out.println(sb);
+//
+//
+//    }
     public static class RealFastReader {
         InputStream is;
 
