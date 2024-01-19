@@ -226,21 +226,6 @@ public final class D {
         return a / GCD(a, b) * b;
     }
 
-    // find highest i which satisfy a[i]<=x
-    static int lowerbound(int[] a, int x) {
-        int l = 0;
-        int r = a.length - 1;
-        while (l < r) {
-            int m = (l + r + 1) / 2;
-            if (a[m] <= x) {
-                l = m;
-            } else {
-                r = m - 1;
-            }
-        }
-        return l;
-    }
-
     static void shuffle(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
             int rand = (int) (Math.random() * arr.length);
