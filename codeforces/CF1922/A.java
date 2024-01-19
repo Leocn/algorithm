@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.InputMismatchException;
 
-public class C {
+public class A {
     static RealFastReader sc = new RealFastReader(System.in);
     static PrintWriter out = new PrintWriter(System.out);
 
@@ -19,40 +19,24 @@ public class C {
     }
 
     /**
-     * 前缀和
+     * 贪心
      */
     public static void solve() {
         int n = sc.ni();
-        int[] g = sc.na(n);
-        int q = sc.ni();
-        long[] pre = new long[n];
-        pre[1] = 1;
-        for (int i = 1; i < n-1; i++) {
-            if(g[i]-g[i-1] <g[i+1]-g[i]){
-                pre[i+1] = pre[i] + g[i+1]-g[i];
-            }else {
-                pre[i+1] = pre[i] + 1;
+        char[] a = sc.ns().toCharArray();
+        char[] b = sc.ns().toCharArray();
+        char[] c = sc.ns().toCharArray();
+        for (int i = 0; i < n; i++) {
+            if(a[i] == b[i] && a[i]!=c[i]){
+                out.println("YES");
+                return;
+            }
+            if(a[i]!=b[i] &&(c[i]!=a[i]&& c[i]!=b[i])){
+                out.println("YES");
+                return;
             }
         }
-        long[] suf = new long[n];
-        suf[n-2] = 1;
-        for (int i = n-2; i >0 ; i--) {
-            if(g[i]-g[i-1] <g[i+1]-g[i]){
-                suf[i-1] = suf[i] + 1;
-            }else {
-                suf[i-1] = suf[i] + g[i]-g[i-1];
-            }
-        }
-
-        while (q-->0){
-            int x = sc.ni()-1, y = sc.ni()-1;
-            if(x<y){
-                out.println(pre[y] -pre[x]);
-            }else {
-                out.println(suf[y] -suf[x]);
-            }
-        }
-
+        out.println("NO");
     }
 
     public static class RealFastReader {

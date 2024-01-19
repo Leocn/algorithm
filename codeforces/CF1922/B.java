@@ -10,6 +10,9 @@ public class B {
     static RealFastReader sc = new RealFastReader(System.in);
     static PrintWriter out = new PrintWriter(System.out);
 
+    /**
+     * 计数
+     */
     public static void main(String[] args) {
         int t = sc.ni();
         while (t-- > 0) {

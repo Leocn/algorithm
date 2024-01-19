@@ -18,6 +18,9 @@ public class D {
         out.close();
     }
 
+    /**
+     * 哈希，模拟
+     */
     public static void solve() {
         int n = sc.ni();
         int[] a = sc.na(n);
@@ -32,24 +35,19 @@ public class D {
             right[i] = i+1;
         }
         int loc = 0;
-        PriorityQueue<int[]> pq = new PriorityQueue<>((h,k)->{
-                if(h[1]>k[1]){
-                    return 1;
-                }else if(h[1]==k[1]){
-                    return 0;
-                }
-                return -1;
-        });
+        List<int[]> list = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            pq.add(new int[]{i, cal(a,d,i,left,right)});
+            int res = cal(a,d,i,left,right);
+            if(res<0){
+                list.add(new int[]{i, res});
+            }
         }
 
         while (true){
             int res = 0;
             Set<Integer> set = new HashSet<>();
             Set<Integer> s2 = new HashSet<>();
-            while (pq.size()>0 && pq.peek()[1]<0){
-                int[] poll = pq.poll();
+            for(int[] poll: list){
                 int p = poll[0];
                 int l = left[p];
                 int r = right[p];
@@ -67,16 +65,12 @@ public class D {
             ans[loc++] = res;
             set.removeAll(s2);
             if(set.size()==0) break;
-            pq = new PriorityQueue<>((h,k)->{
-                if(h[1]>k[1]){
-                    return 1;
-                }else if(h[1]==k[1]){
-                    return 0;
-                }
-                return -1;
-            });
+            list = new ArrayList<>();
             for(int s: set){
-                pq.add(new int[]{s, cal(a,d,s,left,right)});
+                int r = cal(a,d,s,left,right);
+                if(r<0){
+                    list.add(new int[]{s, r});
+                }
             }
         }
         StringBuilder sb = new StringBuilder();
