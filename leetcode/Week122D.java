@@ -76,78 +76,30 @@ public class Week122D {
         TreeMap<Integer,Integer> pqBig = new TreeMap<>((a,b)->b-a);
         TreeMap<Integer,Integer> pqSmall = new TreeMap<>();
         long s = 0;
-        int sizeL = 0;
         for (int i = 2; i <= 1+dist ; i++) {
-            if(sizeL<k-2){
-                pqBig.merge(nums[i], 1, Integer::sum);
-                s += nums[i];
-                sizeL++;
+            if(i-2<k-2){
+                s = leftAdd(pqBig, nums[i], s);
             }else {
-                int x = nums[i];
-                if(x<pqBig.firstKey()){
-
-                    int p = pqBig.firstKey();
-                    int v = pqBig.get(p);
-                    if(v == 1){
-                        pqBig.remove(p);
-                    }else {
-                        pqBig.put(p,v-1);
-                    }
-                    s -= p;
-                    s += x;
-                    pqBig.merge(x, 1, Integer::sum);
-                    pqSmall.merge(p, 1, Integer::sum);
+                if(nums[i]<pqBig.firstKey()){
+                    s = leftToRight(pqBig,pqSmall,nums[i],s);
                 }else {
-                    pqSmall.merge(x, 1, Integer::sum);
+                    addElement(pqSmall, nums[i]);
                 }
             }
         }
         long ans = s + nums[0] + nums[1];
         for (int i = 2; i < n-1-(k-2)+1; i++) {
             if(i+dist<n){
-                int x = nums[i+dist];
-                if(x<pqBig.firstKey()){
-
-                    int p = pqBig.firstKey();
-                    int v = pqBig.get(p);
-                    if(v == 1){
-                        pqBig.remove(p);
-                    }else {
-                        pqBig.put(p,v-1);
-                    }
-                    s -= p;
-                    s += x;
-                    pqBig.merge(x, 1, Integer::sum);
-                    pqSmall.merge(p, 1, Integer::sum);
+                if(nums[i+dist]<pqBig.firstKey()){
+                    s = leftToRight(pqBig,pqSmall,nums[i+dist],s);
                 }else {
-                    pqSmall.merge(x, 1, Integer::sum);
+                    addElement(pqSmall, nums[i+dist]);
                 }
             }
             if(pqBig.containsKey(nums[i])){
-                s-= nums[i];
-                int v = pqBig.get(nums[i]);
-                if(v == 1){
-                    pqBig.remove(nums[i]);
-                }else {
-                    pqBig.put(nums[i],v-1);
-                }
-
-                int another = pqSmall.firstKey();
-                int av = pqSmall.get(another);
-                if(av == 1){
-                    pqSmall.remove(another);
-                }else {
-                    pqSmall.put(another,av-1);
-                }
-                s+= another;
-                pqBig.merge(another, 1, Integer::sum);
+                rightToLeft(pqBig, pqSmall, nums[i], s);
             }else {
-                int v = pqSmall.get(nums[i]);
-                if(v == 1){
-                    pqSmall.remove(nums[i]);
-                }else {
-                    pqSmall.put(nums[i],v-1);
-                }
+                delElement(pqSmall, nums[i]);
             }
 
             ans = Math.min(s + nums[0] + nums[i], ans);
@@ -156,4 +108,41 @@ public class Week122D {
 
     }
 
+    private long leftToRight(TreeMap<Integer,Integer> pqBig,TreeMap<Integer,Integer> pqSmall, int x, long s){
+        int key = pqBig.firstKey();
+        delElement(pqBig, key);
+        s -= key;
+        s += x;
+        addElement(pqBig, x);
+        addElement(pqSmall, key);
+        return s;
+    }
+
+    private long rightToLeft(TreeMap<Integer,Integer> pqBig,TreeMap<Integer,Integer> pqSmall, int x, long s){
+        s-= x;
+        delElement(pqBig, x);
+        int key = pqSmall.firstKey();
+        delElement(pqSmall, key);
+        s+= key;
+        addElement(pqBig, key);
+        return s;
+    }
+
+    private long leftAdd(TreeMap<Integer,Integer> pqBig, int x, long s){
+        addElement(pqBig, x);
+        s += x;
+        return s;
+    }
+    private void delElement(TreeMap<Integer,Integer> map, int key){
+        int v = map.get(key);
+        if(v == 1){
+            map.remove(key);
+        }else {
+            map.put(key,v-1);
+        }
+    }
+
+    private void addElement(TreeMap<Integer,Integer> map, int v){
+        map.merge(v, 1, Integer::sum);
+    }
 }
