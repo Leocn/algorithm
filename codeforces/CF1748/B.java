@@ -10,6 +10,7 @@ public class B {
     static RealFastReader sc = new RealFastReader(System.in);
     static PrintWriter out = new PrintWriter(System.out);
 
+
     public static void main(String[] args) {
         int t = sc.ni();
         while (t-- > 0) {
@@ -18,6 +19,9 @@ public class B {
         out.close();
     }
 
+    /***
+     * 暴力枚举
+     */
     public static void solve() {
         int n = sc.ni();
         char[] cs = sc.ns().toCharArray();
