@@ -30,11 +30,11 @@ public class C {
                 ans += Math.max(0, Math.max(g[i-1], g[i+1]) - g[i] + 1 );
             }
         }else {
-            int pre = 0;
+            long pre = 0;
             for (int i = 1; i <n-1 ; i+=2) {
                 pre += Math.max(0, Math.max(g[i-1], g[i+1]) - g[i] + 1 );
             }
-            int suf = 0;
+            long suf = 0;
             ans = pre;
             for (int i = n-2; i >0 ; i-=2) {
                 suf += Math.max(0, Math.max(g[i-1], g[i+1]) - g[i] + 1);
