@@ -24,13 +24,10 @@ public class Week205 {
             int a = e[1] - 1;
             int b = e[2] - 1;
             if (t == 3) {
-                int ra1 = set1.root(a);
-                int rb1 = set1.root(b);
-                if (ra1 == rb1) {
+                if(!set1.unite(a,b)){
                     ans++;
-                } else {
-                    set1.unite(ra1, rb1);
-                    set2.unite(ra1, rb1);
+                }else {
+                    set2.unite(a,b);
                 }
             }
         }
@@ -39,30 +36,16 @@ public class Week205 {
             int a = e[1] - 1;
             int b = e[2] - 1;
             if(t == 1){
-                int ra1 = set1.root(a);
-                int rb1 = set1.root(b);
-                if (ra1 == rb1) {
+                if(!set1.unite(a,b)){
                     ans++;
-                } else {
-                    set1.unite(ra1, rb1);
                 }
             }else if(t ==2){
-                int ra2 = set2.root(a);
-                int rb2 = set2.root(b);
-                if (ra2 == rb2) {
+                if(!set2.unite(a,b)){
                     ans++;
-                } else {
-                    set2.unite(ra2, rb2);
                 }
             }
         }
-        Set<Integer> f1 = new HashSet<>();
-        Set<Integer> f2 = new HashSet<>();
-        for(int i=0; i<n; i++){
-            f1.add(set1.root(i));
-            f2.add(set2.root(i));
-        }
-        if(f1.size()!=1 || f2.size()!=1){
+        if(set1.count() !=1 || set2.count()!=1){
             return -1;
         }
         return ans;
