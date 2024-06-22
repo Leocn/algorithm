@@ -65,4 +65,20 @@ public class Combitation {
         //先预处理出阶乘   然后 每次 常数时间求解
         return (fac[a] * facR[b] % p) * facR[a - b] % p;
     }
+
+
+    private static final int MAX_N = 32; // 最大的 n 值
+    private static long[][] comb ;
+
+    static {
+        // 初始化组合数数组
+        comb = new long[MAX_N + 1][MAX_N + 1]; // 存储组合数
+        for (int n = 0; n <= MAX_N; n++) {
+            comb[n][0] = comb[n][n] = 1; // C(n, 0) 和 C(n, n) 都是 1
+            for (int k = 1; k < n; k++) {
+                comb[n][k] = comb[n - 1][k - 1] + comb[n - 1][k]; // 帕斯卡尔三角形递推公式
+            }
+        }
+    }
+
 }
